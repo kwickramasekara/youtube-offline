@@ -211,6 +211,15 @@ export class Downloader {
             }
           }
 
+          // Copy poster thumbnail to background.jpg for Media Servers to show same image for both
+          try {
+            const posterPath = path.join(videoFolder, 'poster.jpg');
+            const backgroundPath = path.join(videoFolder, 'background.jpg');
+            await fs.copyFile(posterPath, backgroundPath);
+          } catch (error) {
+            console.warn(`Could not copy thumbnail to background.jpg: ${error}`);
+          }
+
           // Save to database
           await db.addVideo({
             id: video.id,
