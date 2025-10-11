@@ -26,8 +26,9 @@ Automatic YouTube playlist downloader with periodic sync and web interface. Desi
 ### Quick Install
 
 ```bash
-# Clone or download the project
-cd ~/youtube-offline
+# Clone or download the project to your preferred location
+# For Ultraseedbox, recommended: ~/files/apps/youtube-offline
+cd ~/files/apps/youtube-offline
 
 # Run installation script
 ./install.sh
@@ -238,7 +239,6 @@ source ~/.bashrc
 ```bash
 # Ensure directories are writable
 chmod -R u+w ~/youtube-offline/downloads
-chmod -R u+w ~/youtube-offline/logs
 ```
 
 ### Port already in use
@@ -269,7 +269,6 @@ youtube-offline/
 │   └── app.js
 ├── dist/                  # Compiled JavaScript (generated)
 ├── downloads/             # Downloaded videos (default location)
-├── logs/                  # Application logs
 ├── database.json          # Application database
 ├── package.json
 ├── tsconfig.json

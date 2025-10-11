@@ -71,7 +71,6 @@ npm run build
 
 echo ""
 echo "Creating directories..."
-mkdir -p logs
 mkdir -p downloads
 
 echo ""
