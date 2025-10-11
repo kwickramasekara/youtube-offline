@@ -147,6 +147,7 @@ export class Downloader {
       const ytdlp = spawn('yt-dlp', [
         '-f', config.quality,
         '-o', outputTemplate,
+        '--recode-video', 'mp4',
         '--write-thumbnail',
         '--convert-thumbnails', 'jpg',
         '-o', 'thumbnail:' + path.join(videoFolder, 'poster.%(ext)s'),

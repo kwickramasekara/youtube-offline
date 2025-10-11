@@ -6,6 +6,7 @@ Automatic YouTube playlist downloader with periodic sync and web interface. Desi
 
 - **Automatic Playlist Sync**: Periodically checks playlists for new videos (configurable interval, default 6 hours)
 - **Highest Quality Downloads**: Downloads best available quality using yt-dlp
+- **Plex-Compatible Format**: Automatically converts videos to MP4 (H.264/AAC) for universal compatibility and direct play
 - **Organized Storage**: Each video is saved in its own folder with video file and thumbnail (poster.jpg)
 - **Skip Duplicates**: Automatically skips already downloaded videos
 - **Web Interface**: Clean, minimal web UI for management
@@ -83,6 +84,7 @@ Access the web interface at `http://localhost:36660` (or your configured port).
 **Download Organization:**
 - Each video is saved in its own folder named after the YouTube video ID
 - Video thumbnail is automatically downloaded as `poster.jpg` in highest available resolution
+- Videos are automatically converted to MP4 format for maximum compatibility with media servers
 - Example structure:
   ```
   downloads/dQw4w9WgXcQ/
@@ -151,6 +153,8 @@ The quality setting uses yt-dlp format strings. Common examples:
 - `bestvideo[height<=720]+bestaudio/best[height<=720]` - Max 720p
 
 See [yt-dlp format selection](https://github.com/yt-dlp/yt-dlp#format-selection) for more options.
+
+**Note:** All videos are automatically re-encoded to MP4 format (H.264 video codec and AAC audio codec) after download, regardless of the quality format selected. This ensures maximum compatibility with media servers, enabling direct play without transcoding.
 
 ## Database Schema
 
