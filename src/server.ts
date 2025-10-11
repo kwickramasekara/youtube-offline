@@ -247,7 +247,7 @@ async function start() {
 
     // Start server
     const config = db.getConfig();
-    app.listen(config.port, () => {
+    app.listen(config.port, '0.0.0.0', () => {
       console.log(`\n🚀 YouTube Offline is running!`);
       console.log(`📡 Web interface: http://localhost:${config.port}`);
       console.log(`📁 Download path: ${config.downloadPath}`);
