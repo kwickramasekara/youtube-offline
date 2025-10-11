@@ -5,7 +5,7 @@ import type { Database, Playlist, Video, Config } from './types.js';
 const DEFAULT_CONFIG: Config = {
   downloadPath: './downloads',
   checkIntervalHours: 6,
-  port: 3000,
+  port: 36660,
   quality: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
   maxConcurrentDownloads: 2
 };

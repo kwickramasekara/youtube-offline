@@ -72,7 +72,7 @@ systemctl --user start youtube-offline
 
 ### Web Interface
 
-Access the web interface at `http://localhost:3000` (or your configured port).
+Access the web interface at `http://localhost:36660` (or your configured port).
 
 **Adding a Playlist:**
 1. Paste a YouTube playlist URL
@@ -134,7 +134,7 @@ Configuration is stored in `database.json` and can be edited through the web int
 {
   "downloadPath": "./downloads",
   "checkIntervalHours": 6,
-  "port": 3000,
+  "port": 36660,
   "quality": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
   "maxConcurrentDownloads": 2
 }

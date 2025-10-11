@@ -175,7 +175,7 @@ interface Config {
   "config": {
     "downloadPath": "./downloads",
     "checkIntervalHours": 6,
-    "port": 3000,
+    "port": 36660,
     "quality": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
     "maxConcurrentDownloads": 2
   }

@@ -29,12 +29,12 @@ The installer will:
 
 Open your browser and go to:
 ```
-http://localhost:3000
+http://localhost:36660
 ```
 
 Or if you're on Ultraseedbox, use:
 ```
-http://YOUR_SERVER_IP:3000
+http://YOUR_SERVER_IP:36660
 ```
 
 ## 3. Add Your First Playlist
@@ -66,7 +66,7 @@ Scroll to the "Configuration" section to adjust:
 
 - **Download Path**: Where videos are saved (default: `./downloads`)
 - **Check Interval**: How often to check for new videos (default: 6 hours)
-- **Port**: Web interface port (default: 3000)
+- **Port**: Web interface port (default: 36660)
 - **Quality**: Video quality format (default: best MP4)
 - **Max Concurrent Downloads**: How many videos to download at once (default: 2)
 
@@ -113,7 +113,7 @@ source ~/.bashrc
 ```
 
 ### Can't access web interface?
-- Check if port 3000 is available
+- Check if port 36660 is available
 - Try changing the port in configuration
 - Make sure the service is running: `systemctl --user status youtube-offline`
 
