@@ -6,6 +6,7 @@ Automatic YouTube playlist downloader with periodic sync and web interface. Desi
 
 - **Automatic Playlist Sync**: Periodically checks playlists for new videos (configurable interval, default 6 hours)
 - **Highest Quality Downloads**: Downloads best available quality using yt-dlp
+- **Organized Storage**: Each video is saved in its own folder named after the YouTube video ID
 - **Skip Duplicates**: Automatically skips already downloaded videos
 - **Web Interface**: Clean, minimal web UI for management
 - **Queue Management**: Configurable concurrent downloads
@@ -77,6 +78,11 @@ Access the web interface at `http://localhost:3000` (or your configured port).
 1. Paste a YouTube playlist URL
 2. Click "Add Playlist"
 3. The app will automatically fetch playlist info and start downloading
+
+**Download Organization:**
+- Each video is saved in its own folder named after the YouTube video ID
+- Example structure: `downloads/dQw4w9WgXcQ/Video Title Name.mp4`
+- This ensures unique folder names and makes it easy to organize related files (subtitles, thumbnails, etc.) with each video
 
 **Managing Playlists:**
 - **Enable/Disable**: Temporarily stop checking a playlist

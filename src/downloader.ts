@@ -126,11 +126,13 @@ export class Downloader {
   private async downloadVideo(video: VideoInfo & { playlistId: string }): Promise<void> {
     const config = db.getConfig();
 
-    // Ensure download directory exists
-    await fs.mkdir(config.downloadPath, { recursive: true });
-
     const sanitizedTitle = sanitizeFilename(video.title);
-    const outputTemplate = path.join(config.downloadPath, `${sanitizedTitle}.%(ext)s`);
+
+    // Create a folder for each video using video ID
+    const videoFolder = path.join(config.downloadPath, video.id);
+    await fs.mkdir(videoFolder, { recursive: true });
+
+    const outputTemplate = path.join(videoFolder, `${sanitizedTitle}.%(ext)s`);
 
     const progress: DownloadProgress = {
       videoId: video.id,
@@ -190,11 +192,11 @@ export class Downloader {
         if (code === 0) {
           progress.status = 'completed';
 
-          // If outputPath wasn't captured, try to find the file
+          // If outputPath wasn't captured, try to find the file in the video folder
           if (!outputPath) {
             const possibleExtensions = ['mp4', 'webm', 'mkv'];
             for (const ext of possibleExtensions) {
-              const testPath = path.join(config.downloadPath, `${sanitizedTitle}.${ext}`);
+              const testPath = path.join(videoFolder, `${sanitizedTitle}.${ext}`);
               try {
                 await fs.access(testPath);
                 outputPath = testPath;
@@ -210,7 +212,7 @@ export class Downloader {
             id: video.id,
             playlistId: video.playlistId,
             title: video.title,
-            filepath: outputPath || path.join(config.downloadPath, `${sanitizedTitle}.mp4`),
+            filepath: outputPath || path.join(videoFolder, `${sanitizedTitle}.mp4`),
             status: 'completed'
           });
 
