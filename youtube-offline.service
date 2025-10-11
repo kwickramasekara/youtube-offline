@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=%h/files/apps/youtube-offline
-ExecStart=/usr/bin/node %h/files/apps/youtube-offline/dist/server.js
+ExecStart=NODE_PATH_PLACEHOLDER %h/files/apps/youtube-offline/dist/server.js
 Restart=always
 RestartSec=10
 
@@ -15,6 +15,7 @@ StandardError=journal
 
 # Environment
 Environment="NODE_ENV=production"
+Environment="PATH=PATH_PLACEHOLDER:%h/.local/bin:/usr/local/bin:/usr/bin:/bin"
 
 [Install]
 WantedBy=default.target

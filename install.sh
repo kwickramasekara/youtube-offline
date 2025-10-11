@@ -76,9 +76,20 @@ mkdir -p downloads
 echo ""
 echo "Setting up systemd service..."
 
+# Detect Node.js path
+NODE_PATH=$(which node)
+NODE_DIR=$(dirname "$NODE_PATH")
+
+echo "Detected Node.js at: $NODE_PATH"
+echo "Node.js bin directory: $NODE_DIR"
+
 # Copy service file to user systemd directory
 mkdir -p ~/.config/systemd/user
 cp youtube-offline.service ~/.config/systemd/user/
+
+# Replace placeholders with actual paths
+sed -i "s|NODE_PATH_PLACEHOLDER|$NODE_PATH|g" ~/.config/systemd/user/youtube-offline.service
+sed -i "s|PATH_PLACEHOLDER|$NODE_DIR|g" ~/.config/systemd/user/youtube-offline.service
 
 # Reload systemd
 systemctl --user daemon-reload
