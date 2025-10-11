@@ -1,0 +1,23 @@
+[Unit]
+Description=YouTube Offline - Automatic Playlist Downloader
+After=network.target
+
+[Service]
+Type=simple
+User=%u
+WorkingDirectory=%h/youtube-offline
+ExecStart=/usr/bin/node %h/youtube-offline/dist/server.js
+Restart=always
+RestartSec=10
+StandardOutput=append:%h/youtube-offline/logs/output.log
+StandardError=append:%h/youtube-offline/logs/error.log
+
+# Environment
+Environment="NODE_ENV=production"
+
+# Resource limits (adjust as needed)
+MemoryLimit=1G
+CPUQuota=100%
+
+[Install]
+WantedBy=default.target

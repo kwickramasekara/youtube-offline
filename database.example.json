@@ -1,0 +1,28 @@
+{
+  "playlists": [
+    {
+      "id": "1234567890-abc123",
+      "url": "https://www.youtube.com/playlist?list=PLxxxxxxxxxxxxxxxx",
+      "title": "Example Playlist",
+      "lastChecked": "2025-01-15T10:30:00.000Z",
+      "enabled": true
+    }
+  ],
+  "videos": [
+    {
+      "id": "dQw4w9WgXcQ",
+      "playlistId": "1234567890-abc123",
+      "title": "Example Video Title",
+      "downloadedAt": "2025-01-15T10:35:00.000Z",
+      "filepath": "./downloads/Example Video Title.mp4",
+      "status": "completed"
+    }
+  ],
+  "config": {
+    "downloadPath": "./downloads",
+    "checkIntervalHours": 6,
+    "port": 3000,
+    "quality": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+    "maxConcurrentDownloads": 2
+  }
+}

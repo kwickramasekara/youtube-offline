@@ -1,0 +1,329 @@
+// API helpers
+async function api(endpoint, options = {}) {
+    const response = await fetch(`/api${endpoint}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        },
+        ...options
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Request failed');
+    }
+
+    return response.json();
+}
+
+// State
+let playlists = [];
+let videos = [];
+let config = {};
+
+// Initialize
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadData();
+    setupEventListeners();
+    connectEventSource();
+});
+
+async function loadData() {
+    try {
+        [playlists, videos, config] = await Promise.all([
+            api('/playlists'),
+            api('/videos'),
+            api('/config')
+        ]);
+
+        renderPlaylists();
+        renderVideos();
+        renderConfig();
+        updatePlaylistFilter();
+    } catch (error) {
+        console.error('Error loading data:', error);
+        alert('Failed to load data: ' + error.message);
+    }
+}
+
+function setupEventListeners() {
+    // Add playlist form
+    document.getElementById('add-playlist-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const url = document.getElementById('playlist-url').value.trim();
+
+        if (!url) return;
+
+        const button = e.target.querySelector('button[type="submit"]');
+        const originalText = button.textContent;
+        button.textContent = 'Adding...';
+        button.disabled = true;
+
+        try {
+            await api('/playlists', {
+                method: 'POST',
+                body: JSON.stringify({ url })
+            });
+
+            document.getElementById('playlist-url').value = '';
+            await loadData();
+        } catch (error) {
+            alert('Failed to add playlist: ' + error.message);
+        } finally {
+            button.textContent = originalText;
+            button.disabled = false;
+        }
+    });
+
+    // Config form
+    document.getElementById('config-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const updates = {
+            downloadPath: document.getElementById('config-downloadPath').value,
+            checkIntervalHours: parseInt(document.getElementById('config-checkIntervalHours').value),
+            port: parseInt(document.getElementById('config-port').value),
+            quality: document.getElementById('config-quality').value,
+            maxConcurrentDownloads: parseInt(document.getElementById('config-maxConcurrentDownloads').value)
+        };
+
+        const button = e.target.querySelector('button[type="submit"]');
+        const originalText = button.textContent;
+        button.textContent = 'Saving...';
+        button.disabled = true;
+
+        try {
+            await api('/config', {
+                method: 'PUT',
+                body: JSON.stringify(updates)
+            });
+
+            config = updates;
+            alert('Configuration saved successfully!');
+        } catch (error) {
+            alert('Failed to save configuration: ' + error.message);
+        } finally {
+            button.textContent = originalText;
+            button.disabled = false;
+        }
+    });
+
+    // Playlist filter
+    document.getElementById('playlist-filter').addEventListener('change', (e) => {
+        renderVideos(e.target.value || undefined);
+    });
+}
+
+function renderPlaylists() {
+    const container = document.getElementById('playlists-list');
+
+    if (playlists.length === 0) {
+        container.innerHTML = '<div class="empty-state">No playlists added yet</div>';
+        return;
+    }
+
+    container.innerHTML = playlists.map(playlist => {
+        const videoCount = videos.filter(v => v.playlistId === playlist.id).length;
+        const lastChecked = playlist.lastChecked
+            ? new Date(playlist.lastChecked).toLocaleString()
+            : 'Never';
+
+        return `
+            <div class="playlist-item ${!playlist.enabled ? 'disabled' : ''}">
+                <div class="playlist-info">
+                    <div class="playlist-title">${escapeHtml(playlist.title)}</div>
+                    <div class="playlist-meta">
+                        ${videoCount} videos • Last checked: ${lastChecked}
+                    </div>
+                </div>
+                <div class="playlist-actions">
+                    <button class="small secondary" onclick="togglePlaylist('${playlist.id}', ${!playlist.enabled})">
+                        ${playlist.enabled ? 'Disable' : 'Enable'}
+                    </button>
+                    <button class="small" onclick="syncPlaylist('${playlist.id}')">
+                        Sync
+                    </button>
+                    <button class="small secondary" onclick="deletePlaylist('${playlist.id}')">
+                        Delete
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderVideos(playlistId) {
+    const container = document.getElementById('videos-list');
+    const filteredVideos = playlistId
+        ? videos.filter(v => v.playlistId === playlistId)
+        : videos;
+
+    if (filteredVideos.length === 0) {
+        container.innerHTML = '<div class="empty-state">No videos downloaded yet</div>';
+        return;
+    }
+
+    // Sort by download date, newest first
+    const sortedVideos = [...filteredVideos].sort((a, b) =>
+        new Date(b.downloadedAt) - new Date(a.downloadedAt)
+    );
+
+    container.innerHTML = sortedVideos.map(video => {
+        const playlist = playlists.find(p => p.id === video.playlistId);
+        const playlistTitle = playlist ? playlist.title : 'Unknown';
+        const downloadDate = new Date(video.downloadedAt).toLocaleString();
+
+        return `
+            <div class="video-item ${video.status === 'failed' ? 'failed' : ''}">
+                <div class="video-info">
+                    <div class="video-title">${escapeHtml(video.title)}</div>
+                    <div class="video-meta">
+                        ${playlistTitle} • ${downloadDate}
+                        ${video.status === 'completed' ? `• <span class="badge badge-success">Downloaded</span>` : ''}
+                        ${video.status === 'failed' ? `• <span class="badge badge-danger">Failed</span>` : ''}
+                    </div>
+                    ${video.error ? `<div class="video-error">Error: ${escapeHtml(video.error)}</div>` : ''}
+                    ${video.filepath && video.status === 'completed' ? `<div class="video-meta" style="margin-top: 0.25rem; font-size: 0.75rem;">${escapeHtml(video.filepath)}</div>` : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderConfig() {
+    document.getElementById('config-downloadPath').value = config.downloadPath;
+    document.getElementById('config-checkIntervalHours').value = config.checkIntervalHours;
+    document.getElementById('config-port').value = config.port;
+    document.getElementById('config-quality').value = config.quality;
+    document.getElementById('config-maxConcurrentDownloads').value = config.maxConcurrentDownloads;
+}
+
+function updatePlaylistFilter() {
+    const select = document.getElementById('playlist-filter');
+    const currentValue = select.value;
+
+    select.innerHTML = '<option value="">All Playlists</option>' +
+        playlists.map(p => `<option value="${p.id}">${escapeHtml(p.title)}</option>`).join('');
+
+    select.value = currentValue;
+}
+
+function renderDownloadStatus(data) {
+    const statusSection = document.getElementById('download-status');
+    const activeContainer = document.getElementById('active-downloads');
+    const queueContainer = document.getElementById('queue-status');
+
+    if (data.active.length === 0 && data.queueLength === 0) {
+        statusSection.style.display = 'none';
+        return;
+    }
+
+    statusSection.style.display = 'block';
+
+    // Render active downloads
+    if (data.active.length > 0) {
+        activeContainer.innerHTML = data.active.map(download => `
+            <div class="download-item">
+                <div class="download-title">${escapeHtml(download.title)}</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${download.progress}%">
+                        ${Math.round(download.progress)}%
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } else {
+        activeContainer.innerHTML = '';
+    }
+
+    // Render queue status
+    if (data.queueLength > 0) {
+        queueContainer.innerHTML = `
+            <div style="margin-top: 1rem; color: var(--muted-color);">
+                <span class="badge badge-warning">${data.queueLength} in queue</span>
+            </div>
+        `;
+    } else {
+        queueContainer.innerHTML = '';
+    }
+}
+
+function connectEventSource() {
+    const eventSource = new EventSource('/api/events');
+
+    eventSource.addEventListener('message', (e) => {
+        const data = JSON.parse(e.data);
+
+        if (data.type === 'downloads') {
+            renderDownloadStatus(data);
+        }
+    });
+
+    eventSource.addEventListener('error', () => {
+        console.error('EventSource connection error');
+        // Automatically reconnects
+    });
+}
+
+// Playlist actions
+async function togglePlaylist(id, enabled) {
+    try {
+        await api(`/playlists/${id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ enabled })
+        });
+
+        await loadData();
+    } catch (error) {
+        alert('Failed to update playlist: ' + error.message);
+    }
+}
+
+async function syncPlaylist(id) {
+    try {
+        await api('/sync', {
+            method: 'POST',
+            body: JSON.stringify({ playlistId: id })
+        });
+
+        alert('Sync started!');
+    } catch (error) {
+        alert('Failed to start sync: ' + error.message);
+    }
+}
+
+async function deletePlaylist(id) {
+    if (!confirm('Are you sure you want to delete this playlist? This will also remove all associated videos from the database.')) {
+        return;
+    }
+
+    try {
+        await api(`/playlists/${id}`, {
+            method: 'DELETE'
+        });
+
+        await loadData();
+    } catch (error) {
+        alert('Failed to delete playlist: ' + error.message);
+    }
+}
+
+async function syncAll() {
+    try {
+        await api('/sync', {
+            method: 'POST',
+            body: JSON.stringify({})
+        });
+
+        alert('Sync started for all playlists!');
+    } catch (error) {
+        alert('Failed to start sync: ' + error.message);
+    }
+}
+
+// Utilities
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
