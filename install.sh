@@ -81,10 +81,6 @@ echo "Setting up systemd service..."
 mkdir -p ~/.config/systemd/user
 cp youtube-offline.service ~/.config/systemd/user/
 
-# Replace placeholders with actual paths
-sed -i "s|%u|$USER|g" ~/.config/systemd/user/youtube-offline.service
-sed -i "s|%h|$HOME|g" ~/.config/systemd/user/youtube-offline.service
-
 # Reload systemd
 systemctl --user daemon-reload
 

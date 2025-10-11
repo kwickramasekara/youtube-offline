@@ -4,7 +4,6 @@ After=network.target
 
 [Service]
 Type=simple
-User=%u
 WorkingDirectory=%h/youtube-offline
 ExecStart=/usr/bin/node %h/youtube-offline/dist/server.js
 Restart=always
@@ -14,10 +13,6 @@ StandardError=append:%h/youtube-offline/logs/error.log
 
 # Environment
 Environment="NODE_ENV=production"
-
-# Resource limits (adjust as needed)
-MemoryLimit=1G
-CPUQuota=50%
 
 [Install]
 WantedBy=default.target
