@@ -327,8 +327,6 @@ async function syncPlaylist(id) {
       method: "POST",
       body: JSON.stringify({ playlistId: id }),
     });
-
-    alert("Sync started!");
   } catch (error) {
     alert("Failed to start sync: " + error.message);
   }
@@ -360,8 +358,6 @@ async function syncAll() {
       method: "POST",
       body: JSON.stringify({}),
     });
-
-    alert("Sync started for all playlists!");
   } catch (error) {
     alert("Failed to start sync: " + error.message);
   }
