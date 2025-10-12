@@ -154,7 +154,7 @@ export class Downloader {
         '--sponsorblock-remove', 'sponsor,interaction,selfpromo',
         '--write-thumbnail',
         '--convert-thumbnails', 'jpg',
-        '-o', 'thumbnail:' + path.join(videoFolder, 'background.%(ext)s'),
+        '-o', 'thumbnail:' + path.join(videoFolder, 'poster.%(ext)s'),
         '--newline',
         '--no-playlist',
         `https://www.youtube.com/watch?v=${video.id}`
@@ -213,6 +213,16 @@ export class Downloader {
                 // File doesn't exist, try next extension
               }
             }
+          }
+
+          // Duplicate the thumbnail to create separate poster and 
+          // background files for media servers
+          const posterPath = path.join(videoFolder, 'poster.jpg');
+          const backgroundPath = path.join(videoFolder, 'background.jpg');
+          try {
+            await fs.copyFile(posterPath, backgroundPath);
+          } catch (error: any) {
+            console.error(`Failed to create poster copy: ${error.message}`);
           }
 
           // Save to database
