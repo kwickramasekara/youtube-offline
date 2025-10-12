@@ -1,99 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>YouTube Offline</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.blue.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <main class="container">
-        <header>
-            <h1>📺 YouTube Offline</h1>
-            <p>Automatic YouTube playlist downloader</p>
-        </header>
+      <hgroup class="text-center">
+        <h1>📺 YouTube Offline</h1>
+        <p>Automatic YouTube playlist downloader</p>
+      </hgroup>
 
-        <!-- Download Status -->
-        <section id="download-status" class="status-card" style="display: none;">
-            <h3>Current Downloads</h3>
-            <div id="active-downloads"></div>
-            <div id="queue-status"></div>
-        </section>
+      <!-- Download Status -->
+      <section id="download-status" class="hidden">
+        <h2>Current Downloads</h2>
+        <div id="active-downloads"></div>
+        <div id="queue-status"></div>
+      </section>
 
-        <!-- Add Playlist -->
-        <section class="card">
-            <h2>Add Playlist</h2>
-            <form id="add-playlist-form">
-                <div class="grid">
-                    <input
-                        type="text"
-                        id="playlist-url"
-                        placeholder="https://www.youtube.com/playlist?list=..."
-                        required
-                        aria-label="Playlist URL"
-                    >
-                    <button type="submit">Add Playlist</button>
-                </div>
-            </form>
-        </section>
+      <!-- Add Playlist -->
+      <section>
+        <h2>Add Playlist</h2>
+        <form id="add-playlist-form">
+          <input
+            type="text"
+            id="playlist-url"
+            placeholder="Youtube Playlist URL"
+            required
+            aria-label="Playlist URL"
+          />
+          <button type="submit">Add Playlist</button>
+        </form>
+      </section>
 
-        <!-- Playlists List -->
-        <section class="card">
-            <div class="section-header">
-                <h2>Playlists</h2>
-                <button class="secondary" onclick="syncAll()">Sync All</button>
-            </div>
-            <div id="playlists-list"></div>
-        </section>
+      <!-- Playlists List -->
+      <section>
+        <div class="playlist-header">
+          <h2>Playlists</h2>
+          <button class="secondary small" onclick="syncAll()">Sync All</button>
+        </div>
+        <div id="playlists-list"></div>
+      </section>
 
-        <!-- Configuration -->
-        <section class="card">
-            <h2>Configuration</h2>
-            <form id="config-form">
-                <label>
-                    Download Path
-                    <input type="text" id="config-downloadPath" required>
-                </label>
+      <!-- Videos List -->
+      <section>
+        <h2>Downloaded Videos</h2>
+        <select id="playlist-filter" aria-label="Filter by playlist">
+          <option value="">All Playlists</option>
+        </select>
+        <div id="videos-list"></div>
+      </section>
 
-                <label>
-                    Check Interval (hours)
-                    <input type="number" id="config-checkIntervalHours" min="1" required>
-                </label>
+      <!-- Configuration -->
+      <section>
+        <h2>Configuration</h2>
+        <form id="config-form">
+          <label>
+            Download Path
+            <input type="text" id="config-downloadPath" required />
+          </label>
 
-                <label>
-                    Port
-                    <input type="number" id="config-port" min="1" max="65535" required>
-                    <small>Requires restart to take effect</small>
-                </label>
+          <label>
+            Check Interval (hours)
+            <input
+              type="number"
+              id="config-checkIntervalHours"
+              min="1"
+              required
+            />
+          </label>
 
-                <label>
-                    Quality
-                    <input type="text" id="config-quality" required>
-                    <small>yt-dlp format string</small>
-                </label>
+          <label>
+            Port
+            <input
+              type="number"
+              id="config-port"
+              min="1"
+              max="65535"
+              required
+            />
+            <small>Requires restart to take effect</small>
+          </label>
 
-                <label>
-                    Max Concurrent Downloads
-                    <input type="number" id="config-maxConcurrentDownloads" min="1" max="10" required>
-                </label>
+          <label>
+            Quality
+            <input type="text" id="config-quality" required />
+            <small>yt-dlp format string</small>
+          </label>
 
-                <button type="submit">Save Configuration</button>
-            </form>
-        </section>
+          <label>
+            Max Concurrent Downloads
+            <input
+              type="number"
+              id="config-maxConcurrentDownloads"
+              min="1"
+              max="10"
+              required
+            />
+          </label>
 
-        <!-- Videos List -->
-        <section class="card">
-            <h2>Downloaded Videos</h2>
-            <div class="filter-controls">
-                <select id="playlist-filter" aria-label="Filter by playlist">
-                    <option value="">All Playlists</option>
-                </select>
-            </div>
-            <div id="videos-list"></div>
-        </section>
+          <button type="submit">Save Configuration</button>
+        </form>
+      </section>
     </main>
 
     <script src="app.js"></script>
-</body>
+  </body>
 </html>
