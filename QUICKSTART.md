@@ -62,7 +62,7 @@ Watch the "Current Downloads" section to see:
 
 ## 5. Configure Settings
 
-Scroll to the "Configuration" section to adjust:
+Edit the `config.json` file in the project root to adjust settings:
 
 - **Download Path**: Where videos are saved (default: `./downloads`)
 - **Check Interval**: How often to check for new videos (default: 6 hours)
@@ -70,7 +70,10 @@ Scroll to the "Configuration" section to adjust:
 - **Quality**: Video quality format (default: best MP4)
 - **Max Concurrent Downloads**: How many videos to download at once (default: 2)
 
-Click "Save Configuration" to apply changes.
+After editing the file, restart the service:
+```bash
+systemctl --user restart youtube-offline
+```
 
 ## Common Commands
 
@@ -114,7 +117,7 @@ source ~/.bashrc
 
 ### Can't access web interface?
 - Check if port 36660 is available
-- Try changing the port in configuration
+- Try changing the port in `config.json` and restart the service
 - Make sure the service is running: `systemctl --user status youtube-offline`
 
 ## Video Quality Examples
@@ -144,8 +147,9 @@ best
 1. **Enable/Disable Playlists**: Toggle playlists on/off without deleting them
 2. **Manual Sync**: Click "Sync" to immediately check for new videos
 3. **Filter Videos**: Use the playlist dropdown to view videos from a specific playlist
-4. **Edit Database**: The `database.json` file can be manually edited if needed
-5. **Backup**: Regularly backup `database.json` to preserve your configuration
+4. **Edit Configuration**: The `config.json` file can be manually edited for settings
+5. **Edit Database**: The `database.json` file can be manually edited for playlists/videos
+6. **Backup**: Regularly backup both `config.json` and `database.json`
 
 ## Next Steps
 
@@ -159,7 +163,7 @@ best
 
 - 📖 Full documentation: [README.md](README.md)
 - 📋 Product details: [PRD.md](PRD.md)
-- 🔧 Advanced configuration: Edit `database.json`
+- 🔧 Advanced configuration: Edit `config.json`
 - 📝 View logs: `journalctl --user -u youtube-offline -f`
 
 Enjoy your automated YouTube downloads! 🎉

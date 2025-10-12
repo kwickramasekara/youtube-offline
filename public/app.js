@@ -19,7 +19,6 @@ async function api(endpoint, options = {}) {
 // State
 let playlists = [];
 let videos = [];
-let config = {};
 
 // Initialize
 document.addEventListener("DOMContentLoaded", async () => {
@@ -30,15 +29,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function loadData() {
   try {
-    [playlists, videos, config] = await Promise.all([
+    [playlists, videos] = await Promise.all([
       api("/playlists"),
       api("/videos"),
-      api("/config"),
     ]);
 
     renderPlaylists();
     renderVideos();
-    renderConfig();
     updatePlaylistFilter();
   } catch (error) {
     console.error("Error loading data:", error);
@@ -71,45 +68,6 @@ function setupEventListeners() {
         await loadData();
       } catch (error) {
         alert("Failed to add playlist: " + error.message);
-      } finally {
-        button.textContent = originalText;
-        button.disabled = false;
-      }
-    });
-
-  // Config form
-  document
-    .getElementById("config-form")
-    .addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const updates = {
-        downloadPath: document.getElementById("config-downloadPath").value,
-        checkIntervalHours: parseInt(
-          document.getElementById("config-checkIntervalHours").value
-        ),
-        port: parseInt(document.getElementById("config-port").value),
-        quality: document.getElementById("config-quality").value,
-        maxConcurrentDownloads: parseInt(
-          document.getElementById("config-maxConcurrentDownloads").value
-        ),
-      };
-
-      const button = e.target.querySelector('button[type="submit"]');
-      const originalText = button.textContent;
-      button.textContent = "Saving...";
-      button.disabled = true;
-
-      try {
-        await api("/config", {
-          method: "PUT",
-          body: JSON.stringify(updates),
-        });
-
-        config = updates;
-        alert("Configuration saved successfully!");
-      } catch (error) {
-        alert("Failed to save configuration: " + error.message);
       } finally {
         button.textContent = originalText;
         button.disabled = false;
@@ -225,16 +183,6 @@ function renderVideos(playlistId) {
         `;
     })
     .join("");
-}
-
-function renderConfig() {
-  document.getElementById("config-downloadPath").value = config.downloadPath;
-  document.getElementById("config-checkIntervalHours").value =
-    config.checkIntervalHours;
-  document.getElementById("config-port").value = config.port;
-  document.getElementById("config-quality").value = config.quality;
-  document.getElementById("config-maxConcurrentDownloads").value =
-    config.maxConcurrentDownloads;
 }
 
 function updatePlaylistFilter() {

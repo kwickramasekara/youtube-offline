@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { db } from './database.js';
+import { configManager } from './config.js';
 import { downloader } from './downloader.js';
 import { scheduler } from './scheduler.js';
 import { checkYtDlpInstalled } from './utils.js';
@@ -163,42 +164,6 @@ app.post('/api/sync', async (req, res) => {
   }
 });
 
-// Get config
-app.get('/api/config', (req, res) => {
-  try {
-    const config = db.getConfig();
-    res.json(config);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Update config
-app.put('/api/config', async (req, res) => {
-  try {
-    const updates = req.body;
-
-    // Validate updates
-    if (updates.port && (updates.port < 1 || updates.port > 65535)) {
-      return res.status(400).json({ error: 'Invalid port number' });
-    }
-
-    if (updates.checkIntervalHours && updates.checkIntervalHours < 1) {
-      return res.status(400).json({ error: 'Check interval must be at least 1 hour' });
-    }
-
-    const config = await db.updateConfig(updates);
-
-    // Restart scheduler if interval changed
-    if (updates.checkIntervalHours) {
-      scheduler.restart();
-    }
-
-    res.json(config);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
 // Server-Sent Events for real-time updates
 app.get('/api/events', (req, res) => {
@@ -238,6 +203,10 @@ async function start() {
       process.exit(1);
     }
 
+    // Load configuration
+    await configManager.load();
+    console.log('Configuration loaded');
+
     // Load database
     await db.load();
     console.log('Database loaded');
@@ -246,7 +215,7 @@ async function start() {
     scheduler.start();
 
     // Start server
-    const config = db.getConfig();
+    const config = configManager.getConfig();
     app.listen(config.port, '0.0.0.0', () => {
       console.log(`\n🚀 YouTube Offline is running!`);
       console.log(`📡 Web interface: http://localhost:${config.port}`);

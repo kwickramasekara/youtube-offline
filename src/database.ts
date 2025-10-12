@@ -1,19 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
-import type { Database, Playlist, Video, Config } from './types.js';
-
-const DEFAULT_CONFIG: Config = {
-  downloadPath: './downloads',
-  checkIntervalHours: 6,
-  port: 36660,
-  quality: 'bestvideo[vcodec^=avc]+bestaudio[acodec^=mp4a]/bestvideo[vcodec^=avc]+bestaudio/best',
-  maxConcurrentDownloads: 2
-};
+import type { Database, Playlist, Video } from './types.js';
 
 const DEFAULT_DATABASE: Database = {
   playlists: [],
-  videos: [],
-  config: DEFAULT_CONFIG
+  videos: []
 };
 
 class DatabaseManager {
@@ -27,13 +18,7 @@ class DatabaseManager {
   async load(): Promise<Database> {
     try {
       const data = await fs.readFile(this.dbPath, 'utf-8');
-      const loadedDb = JSON.parse(data) as Database;
-
-      // Merge with defaults in case new config options were added
-      this.db = {
-        ...loadedDb,
-        config: { ...DEFAULT_CONFIG, ...loadedDb.config }
-      };
+      this.db = JSON.parse(data) as Database;
 
       return this.db;
     } catch (error: any) {
@@ -145,18 +130,6 @@ class DatabaseManager {
     db.videos.splice(videoIndex, 1);
     await this.save();
     return deletedVideo;
-  }
-
-  // Config methods
-  async updateConfig(updates: Partial<Config>): Promise<Config> {
-    const db = this.getDatabase();
-    db.config = { ...db.config, ...updates };
-    await this.save();
-    return db.config;
-  }
-
-  getConfig(): Config {
-    return this.getDatabase().config;
   }
 
   // Utility

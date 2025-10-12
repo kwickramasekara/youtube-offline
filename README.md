@@ -105,13 +105,6 @@ Access the web interface at `http://localhost:36660` (or your configured port).
 - **Sync**: Manually trigger a sync for a specific playlist
 - **Delete**: Remove playlist and all associated download records
 
-**Configuration:**
-- Download path
-- Check interval (hours)
-- Port number
-- Video quality format string
-- Max concurrent downloads
-
 ### Command Line
 
 ```bash
@@ -136,7 +129,7 @@ npm run dev
 
 ## Configuration
 
-Configuration is stored in `database.json` and can be edited through the web interface or manually.
+Configuration is stored in `config.json` at the root of the project directory. Edit this file to change settings, then restart the service for changes to take effect.
 
 ### Default Configuration
 
@@ -163,9 +156,22 @@ See [yt-dlp format selection](https://github.com/yt-dlp/yt-dlp#format-selection)
 
 **Note:** All videos are automatically re-encoded to MP4 format (H.264 video codec and AAC audio codec) after download, regardless of the quality format selected. This ensures maximum compatibility with media servers, enabling direct play without transcoding.
 
+### Configuration Parameters
+
+- **downloadPath**: Directory where videos will be saved (relative or absolute path)
+- **checkIntervalHours**: How often to check playlists for new videos (in hours)
+- **port**: Port number for the web interface (requires restart to take effect)
+- **quality**: yt-dlp format string for video quality selection
+- **maxConcurrentDownloads**: Maximum number of simultaneous downloads (1-10)
+
+After editing `config.json`, restart the service:
+```bash
+systemctl --user restart youtube-offline
+```
+
 ## Database Schema
 
-The `database.json` file contains three main sections:
+The `database.json` file contains two main sections:
 
 ### Playlists
 ```json
@@ -190,9 +196,6 @@ The `database.json` file contains three main sections:
 }
 ```
 
-### Config
-See Configuration section above.
-
 ## API Endpoints
 
 The application provides a REST API:
@@ -211,10 +214,6 @@ The application provides a REST API:
 - `GET /api/downloads/status` - Get current download status
 - `POST /api/sync` - Trigger manual sync (all playlists)
 - `POST /api/sync` (with `playlistId`) - Sync specific playlist
-
-### Configuration
-- `GET /api/config` - Get current configuration
-- `PUT /api/config` - Update configuration
 
 ### Real-time Updates
 - `GET /api/events` - Server-Sent Events for live download progress
@@ -254,7 +253,7 @@ chmod -R u+w ~/youtube-offline/downloads
 
 ### Port already in use
 
-Edit `database.json` and change the port number, or use the web interface settings.
+Edit `config.json` and change the port number, then restart the service.
 
 ### Download failures
 
@@ -291,15 +290,19 @@ youtube-offline/
 
 ### Custom Download Path
 
-You can configure a custom download path through the web interface or by editing `database.json`:
+You can configure a custom download path by editing `config.json`:
 
 ```json
 {
-  "config": {
-    "downloadPath": "/path/to/your/downloads"
-  }
+  "downloadPath": "/path/to/your/downloads",
+  "checkIntervalHours": 6,
+  "port": 36660,
+  "quality": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+  "maxConcurrentDownloads": 2
 }
 ```
+
+Then restart the service for changes to take effect.
 
 ### Multiple Instances
 

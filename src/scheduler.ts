@@ -1,12 +1,12 @@
 import cron from 'node-cron';
-import { db } from './database.js';
+import { configManager } from './config.js';
 import { downloader } from './downloader.js';
 
 export class Scheduler {
   private task: cron.ScheduledTask | null = null;
 
   start(): void {
-    const config = db.getConfig();
+    const config = configManager.getConfig();
     const hours = config.checkIntervalHours;
 
     // Convert hours to cron expression: "0 */6 * * *" for every 6 hours

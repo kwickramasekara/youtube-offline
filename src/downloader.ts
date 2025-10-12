@@ -4,6 +4,7 @@ import { exec } from 'child_process';
 import path from 'path';
 import fs from 'fs/promises';
 import { db } from './database.js';
+import { configManager } from './config.js';
 import { sanitizeFilename, parseProgress } from './utils.js';
 import type { Playlist, Video, DownloadProgress } from './types.js';
 
@@ -72,7 +73,7 @@ export class Downloader {
       console.log(`Deleting removed video: ${video.title}`);
 
       // Delete the video folder
-      const config = db.getConfig();
+      const config = configManager.getConfig();
       const videoFolder = path.join(config.downloadPath, video.id);
 
       try {
@@ -135,7 +136,7 @@ export class Downloader {
     if (this.isProcessingQueue) return;
     this.isProcessingQueue = true;
 
-    const config = db.getConfig();
+    const config = configManager.getConfig();
 
     while (this.downloadQueue.length > 0) {
       // Check if we're at max concurrent downloads
@@ -157,7 +158,7 @@ export class Downloader {
   }
 
   private async downloadVideo(video: VideoInfo & { playlistId: string }): Promise<void> {
-    const config = db.getConfig();
+    const config = configManager.getConfig();
 
     const sanitizedTitle = sanitizeFilename(video.title);
 

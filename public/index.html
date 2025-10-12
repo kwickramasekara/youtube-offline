@@ -61,57 +61,6 @@
         <div id="videos-list"></div>
       </section>
 
-      <!-- Configuration -->
-      <section>
-        <h2>Configuration</h2>
-        <form id="config-form">
-          <label>
-            Download Path
-            <input type="text" id="config-downloadPath" required />
-          </label>
-
-          <label>
-            Check Interval (hours)
-            <input
-              type="number"
-              id="config-checkIntervalHours"
-              min="1"
-              required
-            />
-          </label>
-
-          <label>
-            Port
-            <input
-              type="number"
-              id="config-port"
-              min="1"
-              max="65535"
-              required
-            />
-            <small>Requires restart to take effect</small>
-          </label>
-
-          <label>
-            Quality
-            <input type="text" id="config-quality" required />
-            <small>yt-dlp format string</small>
-          </label>
-
-          <label>
-            Max Concurrent Downloads
-            <input
-              type="number"
-              id="config-maxConcurrentDownloads"
-              min="1"
-              max="10"
-              required
-            />
-          </label>
-
-          <button type="submit">Save Configuration</button>
-        </form>
-      </section>
     </main>
 
     <script src="app.js"></script>

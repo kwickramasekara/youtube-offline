@@ -27,7 +27,6 @@ export interface Config {
 export interface Database {
   playlists: Playlist[];
   videos: Video[];
-  config: Config;
 }
 
 export interface DownloadProgress {
