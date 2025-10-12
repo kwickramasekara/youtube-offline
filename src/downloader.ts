@@ -148,6 +148,8 @@ export class Downloader {
         '-f', config.quality,
         '-o', outputTemplate,
         '--recode-video', 'mp4',
+        '--embed-chapters',
+        '--embed-metadata',
         '--write-thumbnail',
         '--convert-thumbnails', 'jpg',
         '-o', 'thumbnail:' + path.join(videoFolder, 'poster.%(ext)s'),

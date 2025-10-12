@@ -7,6 +7,8 @@ Automatic YouTube playlist downloader with periodic sync and web interface. Desi
 - **Automatic Playlist Sync**: Periodically checks playlists for new videos (configurable interval, default 6 hours)
 - **Highest Quality Downloads**: Downloads best available quality using yt-dlp
 - **Plex-Compatible Format**: Automatically converts videos to MP4 (H.264/AAC) for universal compatibility and direct play
+- **Chapter Support**: Embeds YouTube chapter markers into downloaded videos for Plex and Infuse
+- **Metadata Embedding**: Includes video title, description, and other metadata in the downloaded files
 - **Organized Storage**: Each video is saved in its own folder with video file and thumbnail (poster.jpg)
 - **Skip Duplicates**: Automatically skips already downloaded videos
 - **Web Interface**: Clean, minimal web UI for management
@@ -85,6 +87,8 @@ Access the web interface at `http://localhost:36660` (or your configured port).
 - Each video is saved in its own folder named after the YouTube video ID
 - Video thumbnail is automatically downloaded as `poster.jpg` in highest available resolution
 - Videos are automatically converted to MP4 format for maximum compatibility with media servers
+- YouTube chapter markers are embedded into the video file for easy navigation in Plex and Infuse
+- Video metadata (title, description, etc.) is embedded into the MP4 file
 - Example structure:
   ```
   downloads/dQw4w9WgXcQ/
