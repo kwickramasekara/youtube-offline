@@ -91,9 +91,6 @@ function renderPlaylists() {
 
   container.innerHTML = playlists
     .map((playlist) => {
-      const videoCount = videos.filter(
-        (v) => v.playlistId === playlist.id
-      ).length;
       const lastChecked = playlist.lastChecked
         ? new Date(playlist.lastChecked).toLocaleString()
         : "Never";
@@ -107,7 +104,7 @@ function renderPlaylists() {
                       playlist.title
                     )}</div>
                     <div class="playlist-meta">
-                        ${videoCount} videos • Last checked: ${lastChecked}
+                        Last checked: ${lastChecked}
                     </div>
                 </div>
                 <div class="playlist-actions">
