@@ -28,28 +28,28 @@
         <div id="queue-status"></div>
       </section>
 
-      <!-- Add Playlist -->
-      <section>
-        <h2>Add Playlist</h2>
-        <form id="add-playlist-form">
-          <input
-            type="text"
-            id="playlist-url"
-            placeholder="Youtube Playlist URL"
-            required
-            aria-label="Playlist URL"
-          />
-          <button type="submit">Add Playlist</button>
-        </form>
-      </section>
-
-      <!-- Playlists List -->
+      <!-- Playlists -->
       <section>
         <div class="playlist-header">
           <h2>Playlists</h2>
-          <button class="secondary small" onclick="syncAll()">Sync All</button>
+          <button class="contrast small" onclick="syncAll()">Sync All</button>
         </div>
         <div id="playlists-list"></div>
+
+        <hr />
+
+        <div>
+          <form id="add-playlist-form" class="grid">
+            <input
+              type="text"
+              id="playlist-url"
+              placeholder="Youtube Playlist URL"
+              required
+              aria-label="Playlist URL"
+            />
+            <button type="submit">Add Playlist</button>
+          </form>
+        </div>
       </section>
 
       <!-- Videos List -->
@@ -60,7 +60,6 @@
         </select>
         <div id="videos-list"></div>
       </section>
-
     </main>
 
     <script src="app.js"></script>
