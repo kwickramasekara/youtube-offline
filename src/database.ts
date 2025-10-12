@@ -133,6 +133,20 @@ class DatabaseManager {
     return db.videos.some(v => v.id === videoId && v.status === 'completed');
   }
 
+  async deleteVideo(videoId: string): Promise<Video | null> {
+    const db = this.getDatabase();
+    const videoIndex = db.videos.findIndex(v => v.id === videoId);
+
+    if (videoIndex === -1) {
+      return null;
+    }
+
+    const deletedVideo = db.videos[videoIndex];
+    db.videos.splice(videoIndex, 1);
+    await this.save();
+    return deletedVideo;
+  }
+
   // Config methods
   async updateConfig(updates: Partial<Config>): Promise<Config> {
     const db = this.getDatabase();

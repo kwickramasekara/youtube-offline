@@ -58,6 +58,39 @@ export class Downloader {
       await db.updatePlaylist(playlist.id, { title: playlistInfo.title });
     }
 
+    // Get current video IDs from YouTube playlist
+    const currentVideoIds = new Set(playlistInfo.entries.map(v => v.id));
+
+    // Get videos in database for this playlist
+    const dbVideos = db.getVideos(playlist.id);
+
+    // Find videos that are in the database but no longer in the playlist
+    const videosToDelete = dbVideos.filter(v => !currentVideoIds.has(v.id));
+
+    // Delete removed videos
+    for (const video of videosToDelete) {
+      console.log(`Deleting removed video: ${video.title}`);
+
+      // Delete the video folder
+      const config = db.getConfig();
+      const videoFolder = path.join(config.downloadPath, video.id);
+
+      try {
+        await fs.rm(videoFolder, { recursive: true, force: true });
+        console.log(`✓ Deleted folder: ${videoFolder}`);
+      } catch (error: any) {
+        console.error(`Failed to delete folder ${videoFolder}: ${error.message}`);
+      }
+
+      // Delete from database
+      await db.deleteVideo(video.id);
+      console.log(`✓ Deleted from database: ${video.title}`);
+    }
+
+    if (videosToDelete.length > 0) {
+      console.log(`Removed ${videosToDelete.length} deleted video(s) from playlist: ${playlist.title}`);
+    }
+
     // Filter out already downloaded videos
     const newVideos = playlistInfo.entries.filter(
       video => !db.isVideoDownloaded(video.id)
