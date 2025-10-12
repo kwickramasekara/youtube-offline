@@ -106,6 +106,15 @@ button.small {
   font-size: 0.875rem;
 }
 
+button.error {
+  background-color: var(--pico-color-red-450);
+  border-color: var(--pico-color-red-450);
+  color: white;
+}
+button.error:hover {
+  background-color: var(--pico-color-red-400);
+}
+
 /* Utils */
 .text-center {
   text-align: center;

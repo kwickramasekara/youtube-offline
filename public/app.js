@@ -113,7 +113,7 @@ function renderPlaylists() {
                     }', ${!playlist.enabled})">
                         ${playlist.enabled ? "Disable" : "Enable"}
                     </button>
-                    <button class="small secondary" onclick="deletePlaylist('${
+                    <button class="small error" onclick="deletePlaylist('${
                       playlist.id
                     }')">
                         Delete
