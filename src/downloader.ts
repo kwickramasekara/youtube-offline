@@ -150,9 +150,10 @@ export class Downloader {
         '--recode-video', 'mp4',
         '--embed-chapters',
         '--embed-metadata',
+        '--embed-thumbnail',
         '--write-thumbnail',
         '--convert-thumbnails', 'jpg',
-        '-o', 'thumbnail:' + path.join(videoFolder, 'poster.%(ext)s'),
+        '-o', 'thumbnail:' + path.join(videoFolder, 'background.%(ext)s'),
         '--newline',
         '--no-playlist',
         `https://www.youtube.com/watch?v=${video.id}`
@@ -211,15 +212,6 @@ export class Downloader {
                 // File doesn't exist, try next extension
               }
             }
-          }
-
-          // Copy poster thumbnail to background.jpg for Media Servers to show same image for both
-          try {
-            const posterPath = path.join(videoFolder, 'poster.jpg');
-            const backgroundPath = path.join(videoFolder, 'background.jpg');
-            await fs.copyFile(posterPath, backgroundPath);
-          } catch (error) {
-            console.warn(`Could not copy thumbnail to background.jpg: ${error}`);
           }
 
           // Save to database

@@ -85,15 +85,16 @@ Access the web interface at `http://localhost:36660` (or your configured port).
 
 **Download Organization:**
 - Each video is saved in its own folder named after the YouTube video ID
-- Video thumbnail is automatically downloaded as `poster.jpg` in highest available resolution
+- Video thumbnail is automatically downloaded as `background.jpg` and embedded into the MP4 as cover art
 - Videos are automatically converted to MP4 format for maximum compatibility with media servers
 - YouTube chapter markers are embedded into the video file for easy navigation in Plex and Infuse
 - Video metadata (title, description, etc.) is embedded into the MP4 file
+- Plex uses the embedded thumbnail as poster art and `background.jpg` as backdrop image
 - Example structure:
   ```
   downloads/dQw4w9WgXcQ/
-  ├── Video Title Name.mp4
-  └── poster.jpg
+  ├── Video Title Name.mp4  (with embedded poster, chapters, and metadata)
+  └── background.jpg
   ```
 - This ensures unique folder names and keeps all related files organized together
 
