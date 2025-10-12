@@ -8,7 +8,7 @@ Automatic YouTube playlist downloader with periodic sync and web interface. Desi
 - **Highest Quality Downloads**: Downloads best available quality using yt-dlp
 - **Plex-Compatible Format**: Automatically converts videos to MP4 (H.264/AAC) for universal compatibility and direct play
 - **Chapter Support**: Embeds YouTube chapter markers into downloaded videos for Plex and Infuse
-- **SponsorBlock Integration**: Automatically removes sponsor segments from videos
+- **SponsorBlock Integration**: Automatically removes sponsor segments, interaction reminders, and self-promotion from videos
 - **Metadata Embedding**: Includes video title, description, and other metadata in the downloaded files
 - **Organized Storage**: Each video is saved in its own folder with video file and thumbnail
 - **Skip Duplicates**: Automatically skips already downloaded videos
@@ -89,13 +89,13 @@ Access the web interface at `http://localhost:36660` (or your configured port).
 - Video thumbnail is automatically downloaded as `background.jpg` and embedded into the MP4 as cover art
 - Videos are automatically converted to MP4 format for maximum compatibility with media servers
 - YouTube chapter markers are embedded into the video file for easy navigation in Plex and Infuse
-- Sponsor segments are automatically removed from videos using SponsorBlock data
+- Sponsor segments, interaction reminders (like/subscribe), and self-promotion are automatically removed from videos using SponsorBlock data
 - Video metadata (title, description, etc.) is embedded into the MP4 file
 - Plex uses the embedded thumbnail as poster art and `background.jpg` as backdrop image
 - Example structure:
   ```
   downloads/dQw4w9WgXcQ/
-  ├── Video Title Name.mp4  (with embedded poster, chapters, metadata, and sponsor segments removed)
+  ├── Video Title Name.mp4  (with embedded poster, chapters, metadata, sponsor segments/interactions/selfpromo removed)
   └── background.jpg
   ```
 - This ensures unique folder names and keeps all related files organized together
