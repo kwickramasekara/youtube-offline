@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=%h/files/apps/youtube-offline
-ExecStart=NODE_PATH_PLACEHOLDER %h/files/apps/youtube-offline/dist/server.js
+WorkingDirectory=WORKING_DIR_PLACEHOLDER
+ExecStart=NODE_PATH_PLACEHOLDER WORKING_DIR_PLACEHOLDER/dist/server.js
 Restart=always
 RestartSec=10
 
