@@ -6,7 +6,7 @@ const DEFAULT_CONFIG: Config = {
   downloadPath: './downloads',
   checkIntervalHours: 6,
   port: 36660,
-  quality: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+  quality: 'bestvideo[vcodec^=avc]+bestaudio[acodec^=mp4a]/bestvideo[vcodec^=avc]+bestaudio/best',
   maxConcurrentDownloads: 2
 };
 

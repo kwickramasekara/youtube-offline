@@ -147,7 +147,7 @@ export class Downloader {
       const ytdlp = spawn('yt-dlp', [
         '-f', config.quality,
         '-o', outputTemplate,
-        '--recode-video', 'mp4',
+        '--merge-output-format', 'mp4',
         '--embed-chapters',
         '--embed-metadata',
         '--embed-thumbnail',
