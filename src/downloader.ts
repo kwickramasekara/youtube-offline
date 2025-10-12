@@ -151,7 +151,7 @@ export class Downloader {
         '--embed-chapters',
         '--embed-metadata',
         '--embed-thumbnail',
-        '--sponsorblock-mark', 'sponsor',
+        '--sponsorblock-remove', 'sponsor',
         '--write-thumbnail',
         '--convert-thumbnails', 'jpg',
         '-o', 'thumbnail:' + path.join(videoFolder, 'background.%(ext)s'),
