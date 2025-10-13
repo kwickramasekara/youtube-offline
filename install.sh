@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# YouTube Offline - Installation Script for Ultraseedbox
+# YouTube Offline - Installation Script for remote servers
 # This script installs and sets up the YouTube Offline application
 
 set -e
@@ -16,7 +16,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Check if running on Ultraseedbox or similar environment
+# Check if running on remote server or similar environment
 echo "Checking prerequisites..."
 
 # Check Node.js

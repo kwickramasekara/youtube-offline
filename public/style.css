@@ -7,6 +7,29 @@
   --badge-warning-fg: var(--pico-color-amber-200);
 }
 
+body {
+  min-height: 100vh;
+  width: 100%;
+  background-color: black;
+  position: relative;
+}
+
+.main-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    rgba(134, 29, 19, 0.6),
+    transparent 70%
+  );
+}
+
+main.container {
+  position: relative;
+  z-index: 1;
+}
+
 hgroup h1 {
   color: var(--pico-color-red-450);
 }

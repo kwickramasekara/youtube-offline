@@ -1,12 +1,12 @@
 # YouTube Offline
 
-Automatic YouTube playlist downloader with periodic sync and web interface. Designed to run on Ultraseedbox servers and similar environments.
+Automatic YouTube playlist downloader with periodic sync and web interface. Designed to run on remote servers and similar environments.
 
 ## Features
 
-- **Automatic Playlist Sync**: Periodically checks playlists for new videos (configurable interval, default 6 hours)
+- **Automatic Playlist Sync**: Periodically checks playlists for new videos to download and deletes removed videos
 - **Highest Quality Downloads**: Downloads best available quality using yt-dlp
-- **Plex-Compatible Format**: Automatically converts videos to MP4 (H.264/AAC) for universal compatibility and direct play
+- **Mediaserver Compatible Format**: Automatically converts videos to MP4 (H.264/AAC) for universal compatibility and direct play
 - **Chapter Support**: Embeds YouTube chapter markers into downloaded videos for Plex and Infuse
 - **SponsorBlock Integration**: Automatically removes sponsor segments, interaction reminders, and self-promotion from videos
 - **Metadata Embedding**: Includes video title, description, and other metadata in the downloaded files
@@ -31,8 +31,8 @@ Automatic YouTube playlist downloader with periodic sync and web interface. Desi
 
 ```bash
 # Clone or download the project to your preferred location
-# For Ultraseedbox, recommended: ~/files/apps/youtube-offline
-cd ~/files/apps/youtube-offline
+# For remote apps, recommended: ~/apps/youtube-offline
+cd ~/apps/youtube-offline
 
 # Run installation script
 ./install.sh
@@ -80,11 +80,13 @@ systemctl --user start youtube-offline
 Access the web interface at `http://localhost:36660` (or your configured port).
 
 **Adding a Playlist:**
+
 1. Paste a YouTube playlist URL
 2. Click "Add Playlist"
 3. The app will automatically fetch playlist info and start downloading
 
 **Download Organization:**
+
 - Each video is saved in its own folder named after the YouTube video ID
 - Video thumbnail is automatically downloaded as `background.jpg` and embedded into the MP4 as cover art
 - Videos are automatically converted to MP4 format for maximum compatibility with media servers
@@ -101,6 +103,7 @@ Access the web interface at `http://localhost:36660` (or your configured port).
 - This ensures unique folder names and keeps all related files organized together
 
 **Managing Playlists:**
+
 - **Enable/Disable**: Temporarily stop checking a playlist
 - **Sync**: Manually trigger a sync for a specific playlist
 - **Delete**: Remove playlist and all associated download records
@@ -165,6 +168,7 @@ See [yt-dlp format selection](https://github.com/yt-dlp/yt-dlp#format-selection)
 - **maxConcurrentDownloads**: Maximum number of simultaneous downloads (1-10)
 
 After editing `config.json`, restart the service:
+
 ```bash
 systemctl --user restart youtube-offline
 ```
@@ -174,6 +178,7 @@ systemctl --user restart youtube-offline
 The `database.json` file contains two main sections:
 
 ### Playlists
+
 ```json
 {
   "id": "unique-id",
@@ -185,6 +190,7 @@ The `database.json` file contains two main sections:
 ```
 
 ### Videos
+
 ```json
 {
   "id": "youtube-video-id",
@@ -201,21 +207,25 @@ The `database.json` file contains two main sections:
 The application provides a REST API:
 
 ### Playlists
+
 - `GET /api/playlists` - List all playlists
 - `POST /api/playlists` - Add a new playlist
 - `PATCH /api/playlists/:id` - Update playlist (enable/disable)
 - `DELETE /api/playlists/:id` - Delete playlist
 
 ### Videos
+
 - `GET /api/videos` - List all downloaded videos
 - `GET /api/videos?playlistId=:id` - List videos for specific playlist
 
 ### Downloads
+
 - `GET /api/downloads/status` - Get current download status
 - `POST /api/sync` - Trigger manual sync (all playlists)
 - `POST /api/sync` (with `playlistId`) - Sync specific playlist
 
 ### Real-time Updates
+
 - `GET /api/events` - Server-Sent Events for live download progress
 
 ## Troubleshooting
@@ -316,11 +326,13 @@ To run multiple instances on different ports:
 ### Backup and Restore
 
 **Backup:**
+
 ```bash
 cp database.json database.backup.json
 ```
 
 **Restore:**
+
 ```bash
 systemctl --user stop youtube-offline
 cp database.backup.json database.json
@@ -346,16 +358,19 @@ npm run watch
 ## Dependencies
 
 ### Runtime
+
 - **express** - Web server
 - **node-cron** - Task scheduler
 
 ### Development
+
 - **typescript** - TypeScript compiler
 - **@types/express** - Express type definitions
 - **@types/node** - Node.js type definitions
 - **@types/node-cron** - node-cron type definitions
 
 ### External
+
 - **yt-dlp** - Video downloader (binary, not npm package)
 
 ## License
@@ -365,14 +380,15 @@ MIT
 ## Support
 
 For issues and questions:
+
 1. Check the troubleshooting section
 2. Review logs: `journalctl --user -u youtube-offline -f`
 3. Check yt-dlp issues: https://github.com/yt-dlp/yt-dlp/issues
-4. For Ultraseedbox-specific issues, consult their documentation
 
 ## Credits
 
 Built with:
+
 - [Node.js](https://nodejs.org/)
 - [Express](https://expressjs.com/)
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)

@@ -19,6 +19,7 @@ systemctl --user start youtube-offline
 ```
 
 The installer will:
+
 - ✅ Check for Node.js and npm
 - ✅ Install yt-dlp if not present
 - ✅ Install npm dependencies
@@ -28,11 +29,13 @@ The installer will:
 ## 2. Access the Web Interface
 
 Open your browser and go to:
+
 ```
 http://localhost:36660
 ```
 
-Or if you're on Ultraseedbox, use:
+Or if you're on a remote server, use:
+
 ```
 http://YOUR_SERVER_IP:36660
 ```
@@ -40,6 +43,7 @@ http://YOUR_SERVER_IP:36660
 ## 3. Add Your First Playlist
 
 1. Copy a YouTube playlist URL, for example:
+
    ```
    https://www.youtube.com/playlist?list=PLrAXtmErZgOeiKm4sgNOknGvNjby9efdf
    ```
@@ -56,6 +60,7 @@ http://YOUR_SERVER_IP:36660
 ## 4. Monitor Downloads
 
 Watch the "Current Downloads" section to see:
+
 - Active downloads with progress bars
 - Queue length (pending downloads)
 - Download status
@@ -71,6 +76,7 @@ Edit the `config.json` file in the project root to adjust settings:
 - **Max Concurrent Downloads**: How many videos to download at once (default: 2)
 
 After editing the file, restart the service:
+
 ```bash
 systemctl --user restart youtube-offline
 ```
@@ -78,21 +84,25 @@ systemctl --user restart youtube-offline
 ## Common Commands
 
 ### Check Service Status
+
 ```bash
 systemctl --user status youtube-offline
 ```
 
 ### View Live Logs
+
 ```bash
 journalctl --user -u youtube-offline -f
 ```
 
 ### Restart Service
+
 ```bash
 systemctl --user restart youtube-offline
 ```
 
 ### Stop Service
+
 ```bash
 systemctl --user stop youtube-offline
 ```
@@ -100,12 +110,14 @@ systemctl --user stop youtube-offline
 ## Troubleshooting
 
 ### Service won't start?
+
 ```bash
 # Check logs for errors
 journalctl --user -u youtube-offline -n 50
 ```
 
 ### yt-dlp not found?
+
 ```bash
 # Ensure it's in your PATH
 which yt-dlp
@@ -116,6 +128,7 @@ source ~/.bashrc
 ```
 
 ### Can't access web interface?
+
 - Check if port 36660 is available
 - Try changing the port in `config.json` and restart the service
 - Make sure the service is running: `systemctl --user status youtube-offline`
@@ -123,21 +136,25 @@ source ~/.bashrc
 ## Video Quality Examples
 
 ### Best Quality (Default)
+
 ```
 bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best
 ```
 
 ### Max 1080p
+
 ```
 bestvideo[height<=1080]+bestaudio/best[height<=1080]
 ```
 
 ### Max 720p (Save Space)
+
 ```
 bestvideo[height<=720]+bestaudio/best[height<=720]
 ```
 
 ### Best Overall (Any Format)
+
 ```
 best
 ```
@@ -156,7 +173,7 @@ best
 - Add more playlists
 - Adjust check interval based on your needs
 - Configure custom download path
-- Set up HTTPS (see Ultraseedbox Nginx docs)
+- Set up HTTPS (see remote server Nginx docs)
 - Monitor disk space for downloads
 
 ## Need Help?
