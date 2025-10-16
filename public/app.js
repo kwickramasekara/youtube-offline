@@ -155,27 +155,47 @@ function renderVideos(playlistId) {
 
       return `
             <article>
-                <span class="semi-bold">${escapeHtml(video.title)}</span>
-                <div class="video-meta">
-                    ${playlistTitle} • ${downloadDate}
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                    <div style="flex: 1;">
+                        <span class="semi-bold">${escapeHtml(
+                          video.title
+                        )}</span>
+                        <div class="video-meta">
+                            ${playlistTitle} • ${downloadDate}
+                            ${
+                              video.status === "completed"
+                                ? `• <span class="badge badge-success">Downloaded</span>`
+                                : ""
+                            }
+                            ${
+                              video.status === "failed"
+                                ? `• <span class="badge badge-error">Failed</span>`
+                                : ""
+                            }
+                            ${
+                              video.status === "completed" &&
+                              video.hasSponsorBlock === true
+                                ? `• <span class="badge badge-success">SponsorBlock'd</span>`
+                                : ""
+                            }
+                        </div>
+                        ${
+                          video.error
+                            ? `<div class="video-error">Error: ${escapeHtml(
+                                video.error
+                              )}</div>`
+                            : ""
+                        }
+                    </div>
                     ${
-                      video.status === "completed"
-                        ? `• <span class="badge badge-success">Downloaded</span>`
-                        : ""
-                    }
-                    ${
-                      video.status === "failed"
-                        ? `• <span class="badge badge-error">Failed</span>`
+                      video.status === "completed" &&
+                      video.hasSponsorBlock === true
+                        ? `<button class="small secondary" onclick="recheckSponsorBlock('${video.id}')">
+                            Recheck SponsorBlock
+                           </button>`
                         : ""
                     }
                 </div>
-                ${
-                  video.error
-                    ? `<div class="video-error">Error: ${escapeHtml(
-                        video.error
-                      )}</div>`
-                    : ""
-                }
             </article>
         `;
     })
@@ -307,6 +327,42 @@ async function syncAll() {
     await loadData();
   } catch (error) {
     alert("Failed to start sync: " + error.message);
+  }
+}
+
+async function recheckSponsorBlock(videoId) {
+  try {
+    await api("/sponsorblock-check", {
+      method: "POST",
+      body: JSON.stringify({}),
+    });
+    alert(
+      "SponsorBlock check started. Videos with new data will be re-downloaded."
+    );
+    await loadData();
+  } catch (error) {
+    alert("Failed to start SponsorBlock check: " + error.message);
+  }
+}
+
+async function checkAllSponsorBlock() {
+  if (
+    !confirm(
+      "This will check all videos without SponsorBlock data and re-download those with new segments. Continue?"
+    )
+  ) {
+    return;
+  }
+
+  try {
+    await api("/sponsorblock-check", {
+      method: "POST",
+      body: JSON.stringify({}),
+    });
+    alert("SponsorBlock check started. Check the logs for progress.");
+    await loadData();
+  } catch (error) {
+    alert("Failed to start SponsorBlock check: " + error.message);
   }
 }
 

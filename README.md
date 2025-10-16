@@ -9,6 +9,7 @@ Automatic YouTube playlist downloader with periodic sync and web interface. Desi
 - **Mediaserver Compatible Format**: Automatically converts videos to MP4 (H.264/AAC) for universal compatibility and direct play
 - **Chapter Support**: Embeds YouTube chapter markers into downloaded videos for media players
 - **SponsorBlock Integration**: Automatically removes sponsor segments, interaction reminders, and self-promotion from videos
+- **Smart SponsorBlock Updates**: Tracks SponsorBlock data availability and automatically re-downloads videos when new segment data becomes available
 - **Metadata Embedding**: Includes video title, description, and other metadata in the downloaded files
 - **Organized Storage**: Each video is saved in its own folder with video file and thumbnail
 - **Skip Duplicates**: Automatically skips already downloaded videos
@@ -108,6 +109,18 @@ Access the web interface at `http://localhost:36660` (or your configured port).
 - **Sync**: Manually trigger a sync for a specific playlist
 - **Delete**: Remove playlist and all associated download records
 
+### SponsorBlock Integration
+
+The app intelligently handles SponsorBlock data:
+
+- **During Download**: When a video is downloaded, the app checks if SponsorBlock has segment data (sponsors, interaction reminders, self-promotion) for that video
+- **Tracking**: The database tracks whether SponsorBlock data was available at download time
+- **Automatic Updates**: During scheduled syncs, the app checks videos that didn't have SponsorBlock data previously
+- **Smart Re-downloads**: If SponsorBlock data becomes available for a video (common for new videos as the community adds segments), the video is automatically re-downloaded with sponsors removed
+- **Manual Trigger**: You can also manually trigger a SponsorBlock check via the API endpoint `/api/sponsorblock-check`
+
+This ensures that even newly uploaded videos will eventually have sponsor segments removed once the SponsorBlock community adds them to the database.
+
 ### Command Line
 
 ```bash
@@ -198,9 +211,12 @@ The `database.json` file contains two main sections:
   "title": "Video Title",
   "downloadedAt": "2025-01-15T10:35:00.000Z",
   "filepath": "/path/to/video.mp4",
-  "status": "completed"
+  "status": "completed",
+  "hasSponsorBlock": true
 }
 ```
+
+**Note**: The `hasSponsorBlock` field indicates whether SponsorBlock data was available when the video was downloaded. Videos with `hasSponsorBlock: false` are automatically checked during scheduled syncs for new SponsorBlock data.
 
 ## API Endpoints
 
@@ -223,6 +239,7 @@ The application provides a REST API:
 - `GET /api/downloads/status` - Get current download status
 - `POST /api/sync` - Trigger manual sync (all playlists)
 - `POST /api/sync` (with `playlistId`) - Sync specific playlist
+- `POST /api/sponsorblock-check` - Manually trigger SponsorBlock data check and re-download videos with new data
 
 ### Real-time Updates
 

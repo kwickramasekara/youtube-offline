@@ -15,7 +15,8 @@
       "title": "Example Video Title",
       "downloadedAt": "2025-01-15T10:35:00.000Z",
       "filepath": "./downloads/dQw4w9WgXcQ/Example Video Title.mp4",
-      "status": "completed"
+      "status": "completed",
+      "hasSponsorBlock": true
     }
   ]
 }
