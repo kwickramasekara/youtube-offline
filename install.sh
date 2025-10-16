@@ -41,24 +41,19 @@ echo -e "${GREEN}✓${NC} npm found: $NPM_VERSION"
 # Check yt-dlp
 if ! command -v yt-dlp &> /dev/null; then
     echo -e "${YELLOW}Warning: yt-dlp is not installed${NC}"
-    echo ""
-    echo "Installing yt-dlp to ~/.local/bin/..."
-    mkdir -p ~/.local/bin
-
-    # Download yt-dlp
-    curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp
-    chmod +x ~/.local/bin/yt-dlp
-
-    # Add to PATH if not already there
-    if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-        echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-        export PATH="$HOME/.local/bin:$PATH"
-    fi
-
-    echo -e "${GREEN}✓${NC} yt-dlp installed successfully"
+    echo "Please make sure to install yt-dlp!"
 else
     YTDLP_VERSION=$(yt-dlp --version)
     echo -e "${GREEN}✓${NC} yt-dlp found: $YTDLP_VERSION"
+fi
+
+# Check ffmpeg
+if ! command -v ffmpeg &> /dev/null; then
+    echo -e "${YELLOW}Warning: ffmpeg is not installed${NC}"
+    echo "Please make sure to install ffmpeg!"
+else
+    FFMPEG_VERSION=$(ffmpeg -version | head -n1 | cut -d' ' -f3)
+    echo -e "${GREEN}✓${NC} ffmpeg found: $FFMPEG_VERSION"
 fi
 
 echo ""
@@ -68,10 +63,6 @@ npm install
 echo ""
 echo "Building application..."
 npm run build
-
-echo ""
-echo "Creating directories..."
-mkdir -p downloads
 
 echo ""
 echo "Setting up systemd service..."
