@@ -206,7 +206,7 @@ export class Downloader {
         "--embed-metadata",
         "--embed-thumbnail",
         "--sponsorblock-remove",
-        "sponsor,interaction,selfpromo",
+        config.sponsorBlockCategories.join(","),
         "--write-thumbnail",
         "--convert-thumbnails",
         "jpg",
@@ -290,7 +290,10 @@ export class Downloader {
 
           // Check if SponsorBlock has data for this video
           console.log(`Checking SponsorBlock data for: ${video.title}`);
-          const hasSponsorBlock = await checkSponsorBlockData(video.id);
+          const hasSponsorBlock = await checkSponsorBlockData(
+            video.id,
+            config.sponsorBlockCategories
+          );
           console.log(
             `SponsorBlock data ${
               hasSponsorBlock ? "found" : "not found"
@@ -399,6 +402,7 @@ export class Downloader {
   async checkAndUpdateSponsorBlockVideos(): Promise<void> {
     console.log("Checking for videos that may have new SponsorBlock data...");
 
+    const config = configManager.getConfig();
     const allVideos = db.getVideos();
     const videosWithoutSponsorBlock = allVideos.filter(
       (v) => v.status === "completed" && v.hasSponsorBlock === false
@@ -417,7 +421,10 @@ export class Downloader {
 
     for (const video of videosWithoutSponsorBlock) {
       console.log(`Checking SponsorBlock for: ${video.title}`);
-      const hasSponsorBlock = await checkSponsorBlockData(video.id);
+      const hasSponsorBlock = await checkSponsorBlockData(
+        video.id,
+        config.sponsorBlockCategories
+      );
 
       if (hasSponsorBlock) {
         console.log(`✓ SponsorBlock data now available for: ${video.title}`);

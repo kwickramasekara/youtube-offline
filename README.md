@@ -155,7 +155,8 @@ Configuration is stored in `config.json` at the root of the project directory. E
   "checkIntervalHours": 6,
   "port": 36660,
   "quality": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
-  "maxConcurrentDownloads": 2
+  "maxConcurrentDownloads": 2,
+  "sponsorBlockCategories": ["sponsor", "interaction", "selfpromo"]
 }
 ```
 
@@ -179,6 +180,16 @@ See [yt-dlp format selection](https://github.com/yt-dlp/yt-dlp#format-selection)
 - **port**: Port number for the web interface (requires restart to take effect)
 - **quality**: yt-dlp format string for video quality selection
 - **maxConcurrentDownloads**: Maximum number of simultaneous downloads (1-10)
+- **sponsorBlockCategories**: Array of SponsorBlock segment categories to remove from videos. Common categories include:
+  - `sponsor` - Paid promotion, paid referrals and direct advertisements
+  - `selfpromo` - Self promotion, merchandise, and donation reminders
+  - `interaction` - Interaction reminders (like, subscribe, follow, etc.)
+  - `intro` - Intro sequences and preview/recap segments
+  - `outro` - Outro sequences and credits
+  - `preview` - Preview of upcoming content
+  - `music_offtopic` - Non-music sections in music videos
+  - `poi_highlight` - Highlight points of interest
+  - `filler` - Filler tangent or off-topic sections
 
 After editing `config.json`, restart the service:
 

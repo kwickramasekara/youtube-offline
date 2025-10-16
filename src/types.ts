@@ -23,6 +23,7 @@ export interface Config {
   port: number;
   quality: string;
   maxConcurrentDownloads: number;
+  sponsorBlockCategories: string[];
 }
 
 export interface Database {

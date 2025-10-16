@@ -41,12 +41,17 @@ export function parseProgress(line: string): number | null {
 /**
  * Check if SponsorBlock has data for a video
  * @param videoId YouTube video ID
+ * @param categories SponsorBlock categories to check for
  * @returns true if SponsorBlock has segments for this video, false otherwise
  */
-export async function checkSponsorBlockData(videoId: string): Promise<boolean> {
+export async function checkSponsorBlockData(
+  videoId: string,
+  categories: string[]
+): Promise<boolean> {
   try {
+    const categoriesParam = JSON.stringify(categories);
     const response = await fetch(
-      `https://sponsor.ajay.app/api/skipSegments?videoID=${videoId}&categories=["sponsor","interaction","selfpromo"]`,
+      `https://sponsor.ajay.app/api/skipSegments?videoID=${videoId}&categories=${categoriesParam}`,
       {
         method: "GET",
       }
