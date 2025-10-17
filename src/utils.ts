@@ -1,5 +1,6 @@
 import { exec } from "child_process";
 import { promisify } from "util";
+import https from "https";
 
 const execAsync = promisify(exec);
 
@@ -48,35 +49,67 @@ export async function checkSponsorBlockData(
   videoId: string,
   categories: string[]
 ): Promise<boolean> {
-  try {
-    const categoriesParam = JSON.stringify(categories);
-    const response = await fetch(
-      `https://sponsor.ajay.app/api/skipSegments?videoID=${videoId}&categories=${categoriesParam}`,
-      {
-        method: "GET",
-      }
-    );
+  return new Promise((resolve) => {
+    try {
+      const categoriesParam = encodeURIComponent(JSON.stringify(categories));
+      const url = `https://sponsor.ajay.app/api/skipSegments?videoID=${videoId}&categories=${categoriesParam}`;
 
-    if (response.status === 404) {
-      // No segments found for this video
-      return false;
-    }
+      const request = https.get(url, { timeout: 10000 }, (response) => {
+        // Handle 404 - no segments found
+        if (response.statusCode === 404) {
+          resolve(false);
+          return;
+        }
 
-    if (!response.ok) {
-      console.warn(
-        `SponsorBlock API returned status ${response.status} for video ${videoId}`
+        // Handle non-200 responses
+        if (response.statusCode !== 200) {
+          console.warn(
+            `SponsorBlock API returned status ${response.statusCode} for video ${videoId}`
+          );
+          resolve(false);
+          return;
+        }
+
+        // Collect response data
+        let data = "";
+        response.on("data", (chunk) => {
+          data += chunk;
+        });
+
+        response.on("end", () => {
+          try {
+            const parsed = JSON.parse(data);
+            // Check if there are any segments
+            resolve(Array.isArray(parsed) && parsed.length > 0);
+          } catch (parseError: any) {
+            console.error(
+              `Error parsing SponsorBlock response for ${videoId}:`,
+              parseError.message
+            );
+            resolve(false);
+          }
+        });
+      });
+
+      request.on("error", (error: any) => {
+        console.error(
+          `Error checking SponsorBlock data for ${videoId}:`,
+          error.message
+        );
+        resolve(false);
+      });
+
+      request.on("timeout", () => {
+        console.warn(`SponsorBlock API timeout for video ${videoId}`);
+        request.destroy();
+        resolve(false);
+      });
+    } catch (error: any) {
+      console.error(
+        `Error checking SponsorBlock data for ${videoId}:`,
+        error.message
       );
-      return false;
+      resolve(false);
     }
-
-    const data = await response.json();
-    // Check if there are any segments
-    return Array.isArray(data) && data.length > 0;
-  } catch (error: any) {
-    console.error(
-      `Error checking SponsorBlock data for ${videoId}:`,
-      error.message
-    );
-    return false;
-  }
+  });
 }
